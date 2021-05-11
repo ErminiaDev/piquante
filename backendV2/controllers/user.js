@@ -34,13 +34,17 @@ exports.login = (req, res, next) => {
           res.status(200).json({
             userId: user._id,
             token: jwt.sign(
-              { userId: user._id},
+              { userId: user._id },
+              //clé secrète pour l'encodage (en production: chaîne de caractères longue et aléatoire!)
               'RANDOM_TOKEN_SECRET',
+              //chaque token durera 24 h
               { expiresIn: '24h' }
             )
           });
         })
+        //si problème de connexion à mongodb
         .catch(error => res.status(500).json({ error }));
     })
+    //si problème de connexion à mongodb
     .catch(error => res.status(500).json({ error }));
 };

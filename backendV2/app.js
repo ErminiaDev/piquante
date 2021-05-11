@@ -1,6 +1,7 @@
 const express = require('express');
 
 //body-parser
+const bodyParser = require('body-parser');
 
 //MongoDB object modeling tool
 const mongoose = require('mongoose');
@@ -18,10 +19,24 @@ mongoose.connect(dbURI,{useNewUrlParser: true, useUnifiedTopology: true})
 const app = express();
 
 //CORS
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  next();
+});
 
 //middleware body-parser
+app.use(bodyParser.json());
 
 //enregistrement des routeurs
+app.post('/api/stuff', (req, res, next) => {
+  console.log(req.body);
+  res.status(201).json({
+    message: 'Objet créé !'
+  });
+});
+//app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 
 
