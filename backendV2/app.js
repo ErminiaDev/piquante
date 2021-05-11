@@ -9,6 +9,8 @@ const mongoose = require('mongoose');
 //import des routeurs dans l'application
 const userRoutes = require('./routes/user');
 
+const Sauce = require('./models/sauce');
+
 //mongodb authentification
 const dbURI = 'mongodb+srv://ErminiaG:HhPnwft6x12PtYSpomH@cluster0.e3hpo.mongodb.net/piquante?retryWrites=true&w=majority';
 mongoose.connect(dbURI,{useNewUrlParser: true, useUnifiedTopology: true})
@@ -29,14 +31,26 @@ app.use((req, res, next) => {
 //middleware body-parser
 app.use(bodyParser.json());
 
-//enregistrement des routeurs
-app.post('/api/stuff', (req, res, next) => {
-  console.log(req.body);
-  res.status(201).json({
-    message: 'Objet créé !'
+//enregistrement des routes/requests
+app.post('/api/sauces/', (req, res, next) => {
+  delete req.body._id;
+  const sauce = new Sauce({
+    ...req.body,
+    likes: 0,
+    dislikes: 0,
+    usersLiked: [],
+    usersLiked: []
   });
+  sauce.save()
+    .then(() => res.status(201).json({ message: 'Objet enregistré!'}))
+    .catch(error => res.status(400).json({ error }));
 });
-//app.use('/api/sauces', sauceRoutes);
+
+app.use('/api/sauces/', (req, res, next) => {
+  Sauce.find()
+    .then(sauces => res.status(200).json(sauces))
+    .catch(error => res.status(400).json({ error }));
+});
 app.use('/api/auth', userRoutes);
 
 
