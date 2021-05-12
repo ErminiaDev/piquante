@@ -1,7 +1,7 @@
 const express = require('express');
 
 //body-parser
-const bodyParser = require('body-parser');
+// deprecated const bodyParser = require('body-parser');
 
 //MongoDB object modeling tool
 const mongoose = require('mongoose');
@@ -28,17 +28,20 @@ app.use((req, res, next) => {
   next();
 });
 
-//middleware body-parser
-app.use(bodyParser.json());
+//middleware body-parser (deprecated)
+//app.use(bodyParser.json());
+app.use(express.urlencoded({extended: true}));
+app.use(express.json()); // To parse the incoming requests with JSON payloads
 
 //enregistrement des routes/requests
 app.post('/api/sauces/', (req, res, next) => {
+  const sauceObject = JSON.parse(req.body);
   const sauce = new Sauce({
-    ...req.body,
-    likes: 0,
-    dislikes: 0,
-    usersLiked: [],
-    usersDisliked: []
+      ...sauceObject,
+      likes: 0,
+      dislikes: 0,
+      usersLiked: [],
+      usersDisliked: [],
   });
   sauce.save()
     .then(() => res.status(201).json({ message: 'Objet enregistré!'}))
