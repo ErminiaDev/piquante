@@ -1,7 +1,7 @@
 const express = require('express');
 
 //body-parser
-// deprecated const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 
 //MongoDB object modeling tool
 const mongoose = require('mongoose');
@@ -10,8 +10,12 @@ const mongoose = require('mongoose');
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
+//pour accéder au path de notre serveur
+const path = require('path');
+
 
 //mongodb authentification
+//fichier .env , créer des variables
 const dbURI = 'mongodb+srv://ErminiaG:HhPnwft6x12PtYSpomH@cluster0.e3hpo.mongodb.net/piquante?retryWrites=true&w=majority';
 mongoose.connect(dbURI,{useNewUrlParser: true, useUnifiedTopology: true})
   .then(() => console.log('Connection to MongoDB Atlas successful!'))
@@ -29,14 +33,16 @@ app.use((req, res, next) => {
 });
 
 //middleware body-parser (deprecated)
-//app.use(bodyParser.json());
-app.use(express.urlencoded({extended: true}));
-app.use(express.json()); // To parse the incoming requests with JSON payloads
+app.use(bodyParser.json());
+//app.use(express.urlencoded({extended: true}));
+//app.use(express.json()); // To parse the incoming requests with JSON payloads
+
+//gestionnaire de routage pour les images
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //enregistrement des routes
-app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
-
+app.use('/api/sauces', sauceRoutes);
 
 
 app.use((req, res, next) => {
