@@ -7,9 +7,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 //import des routeurs dans l'application
+const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
-const Sauce = require('./models/sauce');
 
 //mongodb authentification
 const dbURI = 'mongodb+srv://ErminiaG:HhPnwft6x12PtYSpomH@cluster0.e3hpo.mongodb.net/piquante?retryWrites=true&w=majority';
@@ -33,27 +33,10 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({extended: true}));
 app.use(express.json()); // To parse the incoming requests with JSON payloads
 
-//enregistrement des routes/requests
-app.post('/api/sauces/', (req, res, next) => {
-  const sauceObject = JSON.parse(req.body);
-  const sauce = new Sauce({
-      ...sauceObject,
-      likes: 0,
-      dislikes: 0,
-      usersLiked: [],
-      usersDisliked: [],
-  });
-  sauce.save()
-    .then(() => res.status(201).json({ message: 'Objet enregistré!'}))
-    .catch(error => res.status(400).json({ error }));
-});
-
-app.use('/api/sauces/', (req, res, next) => {
-  Sauce.find()
-    .then(sauces => res.status(200).json(sauces))
-    .catch(error => res.status(400).json({ error }));
-});
+//enregistrement des routes
+app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
+
 
 
 app.use((req, res, next) => {
