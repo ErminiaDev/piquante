@@ -12,6 +12,7 @@ const path = require('path');
 //import des routeurs dans l'application
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
+const sauce = require('./models/sauce');
 
 
 
@@ -46,20 +47,6 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 //enregistrement des routes
 app.use('/api/auth', userRoutes);
 app.use('/api/sauces', sauceRoutes);
-
-
-app.use((req, res, next) => {
-    console.log('Requête reçue');
-    next();
-});
-
-
-//fonction qui utilise la requête, la réponse et next, premier middleware
-app.use((req, res, next) => {
-    res.json({ message: 'Votre requête a bien été reçue' });
-    next();
-});
-
 
 //exporter cette application pour y accéder depuis les autres fichiers notamment le serveur
 module.exports = app;
