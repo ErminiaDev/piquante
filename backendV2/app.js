@@ -6,12 +6,14 @@ const bodyParser = require('body-parser');
 //MongoDB object modeling tool
 const mongoose = require('mongoose');
 
+//pour accéder au path de notre serveur
+const path = require('path');
+
 //import des routeurs dans l'application
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
-//pour accéder au path de notre serveur
-const path = require('path');
+
 
 
 //mongodb authentification
@@ -38,6 +40,7 @@ app.use(bodyParser.json());
 //app.use(express.json()); // To parse the incoming requests with JSON payloads
 
 //gestionnaire de routage pour les images
+//__dirname: le dossier où l'on se trouve
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //enregistrement des routes

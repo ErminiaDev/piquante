@@ -1,8 +1,8 @@
 const Sauce = require('../models/sauce');
 
 exports.createSauce = (req, res, next) => {
-  const sauceObject = req.body;
-  console.log(sauceObject);
+  const sauceObject = JSON.parse(req.body.sauce);
+  delete sauceObject._id;
   const sauce = new Sauce({
       ...sauceObject,
       likes: 0,
@@ -10,6 +10,8 @@ exports.createSauce = (req, res, next) => {
       usersLiked: [],
       usersDisliked: [],
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+      //req.protocol: http ou https
+      //req.get('host') ici localhost:3000
   });
   sauce.save()
     .then(() => res.status(201).json({ message: 'Objet enregistré!'}))
