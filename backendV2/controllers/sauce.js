@@ -13,7 +13,7 @@ exports.createSauce = (req, res, next) => {
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` //req.protocol: http ou https et req.get('host') ici localhost:3000
   });
   sauce.save()
-    .then(() => res.status(201).json({ message: 'Objet enregistré!'}))
+    .then(() => res.status(201).json({ message: 'Sauce enregistrée!'}))
     .catch(error => res.status(400).json({ error }));
 };
 
@@ -50,7 +50,7 @@ exports.deleteSauce = (req, res, next) => {
     //supprimer le fichier ayant ce filename
     fs.unlink(`images/${filename}`, () => {
       Sauce.deleteOne({ _id: req.params.id })
-      .then(() => res.status(200).json({ message: 'Sauce modifiée !'}))
+      .then(() => res.status(200).json({ message: 'Sauce supprimée !'}))
       .catch(error => res.status(400).json({ error }));
     })
   })
