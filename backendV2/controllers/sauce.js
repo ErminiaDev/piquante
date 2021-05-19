@@ -61,3 +61,64 @@ exports.deleteSauce = (req, res, next) => {
   })
   .catch(error => res.status(500).json({ error }));
 };
+
+//évaluer une sauce (like/dislike);
+exports.evaluateSauce = (req, res, next) => {
+
+  if( req.body.like === 0 ){
+    Sauce.findOne({ _id: req.params.id})
+    .then((sauce) => {
+      if(sauce.usersLiked.find(user => user === req.body.userId)){
+        Sauce.updateOne(
+          { _id: req.params.id },
+          {
+            $inc: { likes: -1 },
+            $pull: { usersLiked: req.body.userId }
+          }
+        )
+        .then(() => { res.status(201).json({ message: "Evaluation prise en compte!" })})
+        .catch(error => { res.status(400).json({ error })
+        });
+      }
+      if(sauce.usersDisliked.find(user => user === req.body.userId)){
+        Sauce.updateOne(
+          { _id: req.params.id },
+          {
+            $inc: { dislikes: -1 },
+            $pull: { usersDisliked: req.body.userId }
+          }
+        )
+        .then(() => { res.status(201).json({ message: "Evaluation prise en compte!" })})
+        .catch(error => { res.status(400).json({ error })
+        });
+      }
+    })
+    .catch((error) => {res.status(400).json({ error })});
+  }
+
+  if( req.body.like === 1 ){
+    Sauce.updateOne(
+      { _id: req.params.id },
+      {
+        $inc: { likes: 1 },
+        $push: { usersLiked: req.body.userId }
+      }
+    )
+    .then(() => { res.status(201).json({ message: "Evaluation prise en compte!" })})
+    .catch(error => { res.status(400).json({ error })
+    });
+  }
+
+  if( req.body.like === -1 ){
+    Sauce.updateOne(
+      { _id: req.params.id },
+      {
+        $inc: { dislikes: 1 },
+        $push: { usersDisliked: req.body.userId }
+      }
+    )
+    .then(() => { res.status(201).json({ message: "Evaluation prise en compte!" })})
+    .catch(error => { res.status(400).json({ error })
+    });
+  }
+}
