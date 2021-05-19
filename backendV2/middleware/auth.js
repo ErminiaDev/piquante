@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 
+//authentification utilisateur en vérifiant le token
 module.exports = (req, res, next) => {
     try {
         //on split le bearer du token pour ensuite récupérer le deuxième élément de cet array qui est le token

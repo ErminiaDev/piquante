@@ -1,6 +1,7 @@
 const Sauce = require('../models/sauce');
 const fs = require('fs');
 
+//créer une nouvelle sauce
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
   delete sauceObject._id;
@@ -17,18 +18,21 @@ exports.createSauce = (req, res, next) => {
     .catch(error => res.status(400).json({ error }));
 };
 
- exports.findSauces = (req, res, next) => {
+//afficher toutes les sauces
+exports.findSauces = (req, res, next) => {
   Sauce.find()
     .then(sauce => res.status(200).json(sauce))
     .catch(error => res.status(400).json({ error }));
 };
 
+//afficher une sauce en particulier
 exports.findOneSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id })
     .then(sauce => res.status(200).json(sauce))
     .catch(error => res.status(404).json({ error }));
 };
 
+//modifier une sauce existante
 exports.modifySauce = (req, res, next) => {
   const sauceObject = req.file ?
   //soit on change l'image si une nouvelle est fournie soit on modifie juste le corps de la requête
@@ -42,6 +46,7 @@ exports.modifySauce = (req, res, next) => {
   .catch(error => res.status(400).json({ error }));
 };
 
+//supprimer une sauce
 exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id})
   .then( sauce => {
