@@ -9,17 +9,19 @@ const mongoose = require('mongoose');
 //pour accéder au path de notre serveur
 const path = require('path');
 
+//initiating dotenv and making environment variables available throughout the app
+require('dotenv').config()
+
 //import des routeurs dans l'application
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 const sauce = require('./models/sauce');
 
-
-
-
 //mongodb authentification
-//fichier .env , créer des variables
-const dbURI = 'mongodb+srv://ErminiaG:HhPnwft6x12PtYSpomH@cluster0.e3hpo.mongodb.net/piquante?retryWrites=true&w=majority';
+const user = process.env.DB_USERNAME;
+const password = process.env.DB_PASSWORD;
+const cluster = process.env.DB_CLUSTER;
+const dbURI = `mongodb+srv://${user}:${password}@${cluster}`;
 mongoose.connect(dbURI,{useNewUrlParser: true, useUnifiedTopology: true})
   .then(() => console.log('Connection to MongoDB Atlas successful!'))
   .catch(() => console.log('Connection to MongoDB refused...'));

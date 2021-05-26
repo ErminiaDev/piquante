@@ -1,4 +1,7 @@
 backendV2/node_modules
+
+backendV2/.env
+
 backendV2/node_modules/.bin/is-ci
 
 backendV2/node_modules/.bin/nodemon
