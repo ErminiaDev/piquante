@@ -68,6 +68,7 @@ exports.evaluateSauce = (req, res, next) => {
   if( req.body.like === 0 ){
     Sauce.findOne({ _id: req.params.id})
     .then((sauce) => {
+      //si l'utilisateur a déjà like la sauce, on enlève le like et on l'enlève des usersLiked
       if(sauce.usersLiked.find(user => user === req.body.userId)){
         Sauce.updateOne(
           { _id: req.params.id },
@@ -80,6 +81,7 @@ exports.evaluateSauce = (req, res, next) => {
         .catch(error => { res.status(400).json({ error })
         });
       }
+      //si l'utilisateur a déjà dislike la sauce, on enlève le dislike et on l'enlève des usersDisLiked
       if(sauce.usersDisliked.find(user => user === req.body.userId)){
         Sauce.updateOne(
           { _id: req.params.id },
@@ -95,7 +97,7 @@ exports.evaluateSauce = (req, res, next) => {
     })
     .catch((error) => {res.status(400).json({ error })});
   }
-
+  //si l'utilisateur n'a pas déjà like la sauce, on rajoute le like et on l'ajoute aux usersLiked
   if( req.body.like === 1 ){
     Sauce.updateOne(
       { _id: req.params.id },
@@ -108,7 +110,7 @@ exports.evaluateSauce = (req, res, next) => {
     .catch(error => { res.status(400).json({ error })
     });
   }
-
+  //si l'utilisateur n'a pas déjà dislike la sauce, on rajoute le like et on l'ajoute aux usersdisLiked
   if( req.body.like === -1 ){
     Sauce.updateOne(
       { _id: req.params.id },

@@ -1,5 +1,16 @@
 const express = require('express');
 
+//mise en place de plusieurs HTTP headers qui vont sécuriser l'appli
+const helmet = require("helmet");
+
+//empêche les attaques type bruteforce
+const rateLimit = require("express-rate-limit");
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100
+});
+
 //body-parser
 const bodyParser = require('body-parser');
 
@@ -28,6 +39,8 @@ mongoose.connect(dbURI,{useNewUrlParser: true, useUnifiedTopology: true})
 
 //pour créer une application express
 const app = express();
+app.use(helmet());
+app.use("/api/", apiLimiter);
 
 //CORS
 app.use((req, res, next) => {
